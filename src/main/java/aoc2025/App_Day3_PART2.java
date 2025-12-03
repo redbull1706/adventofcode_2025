@@ -1,48 +1,62 @@
 package aoc2025;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class App_Day3_PART2 extends Application{
-	
-	
-	
-	public String run() throws IOException {
-		
-		Iterator<String> iterator = getIterator(Day.THREE);
-		List<String> found = new ArrayList<>();
-		while (iterator.hasNext()) {
-			String line1 = iterator.next();
-			String line2 = iterator.next();
-			String line3 = iterator.next();
-			
-			found.add(findCommon(line1, line2,line3));
-		}
-		int priorities = 0;
-		int counter =0;
-		for (Iterator<String> founditerator = found.iterator(); founditerator.hasNext();) {
-			String string = founditerator.next();
-			try {
-				priorities+= (Item.valueOf(string).ordinal()+1);
-			}catch(IllegalArgumentException iae) {
-				return "nothing found for line "+ counter;
-			}
-			counter++;
-		}
-		return "result: "+ priorities;
-	}
 
 
-	private static String findCommon(String compartment1, String compartment2, String compartment3) {
-		for (int i = 0; i<compartment1.length(); i++) {
-			String toFind = compartment1.substring(i, i+1);
-			if(compartment2.indexOf(toFind)>=0&&compartment3.indexOf(toFind)>=0){
-				return toFind;
-			}
-		}
-		return "";
-	}
-	
+
+  public String run() throws IOException{
+
+    Iterator<String> iterator = getIterator(Day.THREE);
+    double joltage = 0d;
+    while (iterator.hasNext()) {
+      String line = iterator.next();
+      String newJoltage = parseLine(line);
+      System.out.println("Joltage for line: "+line+" = "+ newJoltage);
+      joltage += Double.parseDouble(newJoltage);
+    }
+    return "result: "+ BigDecimal.valueOf(joltage).toPlainString();
+  }
+
+  private String parseLine(String line){
+    String currentLine = String.valueOf(line);
+    char[] chars = line.toCharArray();
+    char[] joltage  = initJoltage(chars);
+    int pointer = 0;
+    for(int i = 11; i>=0; i--){
+      currentLine = line.substring(pointer++,line.length() - i);
+      int maxForPosition = findMaxForPosition(currentLine);
+      if(maxForPosition > -1) {
+        joltage[11 - i] = currentLine.charAt(maxForPosition);
+        pointer += maxForPosition;
+      }else{
+        pointer++;
+      }
+    }
+    return  String.valueOf(joltage);
+  }
+
+  private int findMaxForPosition(String line) {
+    char maxChar = '0';
+    for (char c : line.toCharArray()) {
+      if (c > maxChar) {
+        maxChar = c;
+      }
+    }
+    return line.indexOf(maxChar);
+  }
+
+  private char[] initJoltage(char[] chars){
+    char[] joltage = new char[12];
+    return joltage;
+  }
+
 }

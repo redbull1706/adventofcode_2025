@@ -12,35 +12,30 @@ public class App_Day3_PART1 extends Application{
 	public String run() throws IOException{
 		
 		Iterator<String> iterator = getIterator(Day.THREE);
-		List<String> found = new ArrayList<>();
+		double joltage = 0d;
 		while (iterator.hasNext()) {
 			String line = iterator.next();
-			String compartment1 = line.substring(0, line.length() / 2);
-			String compartment2 = line.substring(line.length() / 2);
-			found.add(findCommon(compartment1, compartment2));
+			String newJoltage = parseLine(line);
+      System.out.println("Joltage for line: "+line+" = "+ newJoltage);
+      joltage += Double.parseDouble(newJoltage);
 		}
-		int priorities = 0;
-		int counter =0;
-		for (Iterator<String> founditerator = found.iterator(); founditerator.hasNext();) {
-			String string = founditerator.next();
-			try {
-				priorities+= (Item.valueOf(string).ordinal()+1);
-			}catch(IllegalArgumentException iae) {
-				return "nothing found for after counter "+counter;
-			}
-			counter++;
-		}
-		return "result: "+ priorities;
+		return "result: "+ joltage;
 	}
 
+  private String parseLine(String line){
+    char[] chars = line.toCharArray();
+    char firstHighest, secondHighest,thirdHighest;
+    firstHighest = chars[0];
+    secondHighest = '0';
+    for(int i=1; i<chars.length; i++){
+      if(chars[i]>firstHighest && i<chars.length-1){
+        firstHighest = chars[i];
+        secondHighest = '0';
+      }else if(chars[i]>secondHighest){
+        secondHighest = chars[i];
+      }
+    }
+    return firstHighest + String.valueOf(secondHighest);
+  }
 
-	private static String findCommon(String compartment1, String compartment2) {
-		for (int i = 0; i<compartment1.length(); i++) {
-			String toFind = compartment1.substring(i, i+1);
-			if(compartment2.indexOf(toFind)>=0) {
-				return toFind;
-			}
-		}
-		return "";
-	}
 }

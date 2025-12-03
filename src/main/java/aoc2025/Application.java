@@ -29,9 +29,9 @@ public class Application {
 //		System.out.println(new App_Day1_PART1().run());
 //		System.out.println(new App_Day1_PART2().run());
 //    System.out.println(new App_Day2_PART1().run());
-		System.out.println(new App_Day2_PART2().run());
+//		System.out.println(new App_Day2_PART2().run());
 //		System.out.println(new App_Day3_PART1().run());
-//		System.out.println(new App_Day3_PART2().run());
+		System.out.println(new App_Day3_PART2().run());
 //		System.out.println(new App_Day4_PART1().run());
 //		System.out.println(new App_Day4_PART2().run());
 //		System.out.println(new App_Day5_PART1().run());
