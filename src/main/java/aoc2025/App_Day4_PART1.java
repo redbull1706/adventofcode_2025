@@ -1,32 +1,84 @@
 package aoc2025;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 
 public class App_Day4_PART1 extends Application{
 	
-	
+	private class Triple{
+    int x, y;
+    char sign;
+    Triple(int x, int y, char sign){
+      this.x = x;
+      this.y = y;
+      this.sign = sign;
+    }
+
+    @Override
+    public String toString() {
+      return "(" + x + "," + y + ", " + sign + ")";
+    }
+  }
+  //int gridSize = 10;
+  int gridSize = 138;
+
 	public String run() throws IOException{
 		
 		Iterator<String> iterator = getIterator(Day.FOUR);
-		int counter = 0;
+		char[][] grid =  new char[gridSize][gridSize];
+    int counter = 0;
+    int result = 0;
 		while (iterator.hasNext()) {
 			String line = iterator.next();
-			String section1 = line.split(",")[0];
-			String section2 = line.split(",")[1];
-			if(checkFullyContains(section1,section2)) {
-				counter++;
-			}
+      char[] lineChars = line.toCharArray();
+			grid[counter++] = lineChars;
 		}
-		return "result: "+ counter;
+    for(int y = 0; y < gridSize;y++){
+      for(int x = 0; x < gridSize;x++){
+        Triple current = new  Triple(x,y,grid[y][x]);
+        if(current.sign == '@'){
+          List<Character> adjacents = getAdjacents(current, grid);
+          long accNeighbourRoles = adjacents.stream().filter(c -> c == '@').count();
+          System.out.println(current+" has rolesAdjacents "+ accNeighbourRoles);
+          if(accNeighbourRoles<4){
+
+            result++;
+          }
+        }
+      }
+    }
+		return "result: "+ result;
 	}
 
-	private static boolean checkFullyContains(String section1, String section2) {
-		int section1start = Integer.valueOf(section1.split("-")[0]);
-		int section1end = Integer.valueOf(section1.split("-")[1]);
-		int section2start = Integer.valueOf(section2.split("-")[0]);
-		int section2end = Integer.valueOf(section2.split("-")[1]);
-		return section1start<=section2start && section1end>=section2end || section2start<=section1start && section2end>=section1end;
-	}
+  private List<Character> getAdjacents(Triple current,char[][] grid){
+    List<Character> adjacents = new ArrayList<Character>();
+    if(current.y==0){
+      getNeighbours(true, current.x, grid[current.y], adjacents);
+      getNeighbours(false, current.x, grid[current.y+1], adjacents);
+    }else if(current.y==gridSize-1){
+      getNeighbours(true, current.x, grid[current.y], adjacents);
+      getNeighbours(false, current.x, grid[current.y-1], adjacents);
+    }else{
+      getNeighbours(false, current.x, grid[current.y-1], adjacents);
+      getNeighbours(true, current.x, grid[current.y], adjacents);
+      getNeighbours(false, current.x, grid[current.y+1], adjacents);
+    }
+    return adjacents;
+  }
+
+  private void getNeighbours(boolean isSameLine, int x,  char[] gridLine, List<Character> adjacents){
+    if(x>0) {
+      adjacents.add(gridLine[x - 1]);
+    }
+    if(!isSameLine) {
+      adjacents.add(gridLine[x]);
+    }
+    if(x<gridSize-1) {
+      adjacents.add(gridLine[x + 1]);
+    }
+  }
 
 }
